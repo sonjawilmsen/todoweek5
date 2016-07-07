@@ -20,12 +20,29 @@ class TodosController < ApplicationController
       format.html { redirect_to todos_path, notice: 'Todo was successfully created.' }
       format.json { render :show, status: :created, location: @todo }
     else
-      format.html do
-        @todos = Todo.all
-        render :index
+      format.html { render :index }
+      format.json { render json: @todo.errors, status: :unprocessable_entity }
       end
+  end
+end
+
+def update
+  respond_to do |format|
+    if @todo.update(todo_params)
+      format.html { redirect_to @todo, notice: 'Todo was successfully updated.' }
+      format.json { render :show, status: :ok, location: @todo }
+    else
+      format.html { render :index }
       format.json { render json: @todo.errors, status: :unprocessable_entity }
     end
+  end
+end
+
+def destroy
+  @todo.destroy
+  respond_to do |format|
+    format.html { redirect_to root_url, notice: 'Todo was successfully destroyed.' }
+    format.json { head :no_content }
   end
 end
 

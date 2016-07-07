@@ -108,18 +108,35 @@ function submitTodo(event) {
 
 function cleanUpDoneTodos(event) {
   event.preventDefault();
-  $.when($(".completed").remove())
-    .then(updateCounters);
+
+  $.each($(".completed"), function(index, listItem) {
+    $listItem = $(listItem);
+    todoId = $(listItem).data('id');
+    deleteTodo(todoId);
+    $listItem.remove();
+  });
 }
 
-$("input[type=checkbox]").bind('change', toggleDone);
-$("form").bind('submit', submitTodo);
-$("#clean-up").bind('click', cleanUpDoneTodos);
-updateCounters();
+function deleteTodo(todoId) {
+  $.ajax({
+    type: "DELETE",
+    url: "/todos/" + todoId + ".json",
+    contentType: "application/json",
+    dataType: "json"})
 
-$(document).ready(function() {
+    .done(function(data) {
+      updateCounters();
+    });
+}
+
   $("input[type=checkbox]").bind('change', toggleDone);
   $("form").bind('submit', submitTodo);
   $("#clean-up").bind('click', cleanUpDoneTodos);
   updateCounters();
-});
+
+  $(document).ready(function() {
+    $("input[type=checkbox]").bind('change', toggleDone);
+    $("form").bind('submit', submitTodo);
+    $("#clean-up").bind('click', cleanUpDoneTodos);
+    updateCounters();
+  });
