@@ -8,9 +8,16 @@ class TodosController < ApplicationController
     @todos = Todo.all.order(:id)
   end
 
+  def show
+  end
+
   def new
     @todo = Todo.new
   end
+
+  def edit
+  end
+
 
   def create
   @todo = Todo.new(todo_params)
